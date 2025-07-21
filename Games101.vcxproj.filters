@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="02\global.hpp" />
+    <ClInclude Include="05\global.hpp" />
+    <ClInclude Include="05\Light.hpp" />
+    <ClInclude Include="05\Object.hpp" />
+    <ClInclude Include="05\Renderer.hpp" />
+    <ClInclude Include="05\Scene.hpp" />
+    <ClInclude Include="05\Sphere.hpp" />
+    <ClInclude Include="05\Triangle.hpp" />
+    <ClInclude Include="05\Vector.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="05\main.cpp" />
+    <ClCompile Include="05\Renderer.cpp" />
+    <ClCompile Include="05\Scene.cpp" />
+  </ItemGroup>
+</Project>
