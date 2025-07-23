@@ -2,9 +2,9 @@
 #include <cassert>
 #include "BVH.hpp"
 
-BVHAccel::BVHAccel(std::vector<Object*> p, int maxPrimsInNode,
-                   SplitMethod splitMethod)
-    : maxPrimsInNode(std::min(255, maxPrimsInNode)), splitMethod(splitMethod),
+BVHAccel::BVHAccel(std::vector<Object*> p, int maxPrimsInNode, SplitMethod splitMethod)
+    : maxPrimsInNode(std::min(255, maxPrimsInNode)), 
+      splitMethod(splitMethod),
       primitives(std::move(p))
 {
     time_t start, stop;
@@ -20,8 +20,7 @@ BVHAccel::BVHAccel(std::vector<Object*> p, int maxPrimsInNode,
     int mins = ((int)diff / 60) - (hrs * 60);
     int secs = (int)diff - (hrs * 3600) - (mins * 60);
 
-    printf(
-        "\rBVH Generation complete: \nTime Taken: %i hrs, %i mins, %i secs\n\n",
+    printf("\rBVH Generation complete: \nTime Taken: %i hrs, %i mins, %i secs\n\n",
         hrs, mins, secs);
 }
 
@@ -50,10 +49,10 @@ BVHBuildNode* BVHAccel::recursiveBuild(std::vector<Object*> objects)
     }
     else {
         Bounds3 centroidBounds;
+        //合并所有box
         for (int i = 0; i < objects.size(); ++i)
-            centroidBounds =
-                Union(centroidBounds, objects[i]->getBounds().Centroid());
-        int dim = centroidBounds.maxExtent();
+            centroidBounds = Union(centroidBounds, objects[i]->getBounds().Centroid());
+        int dim = centroidBounds.maxExtent();//最大轴排序
         switch (dim) {
         case 0:
             std::sort(objects.begin(), objects.end(), [](auto f1, auto f2) {
@@ -105,5 +104,35 @@ Intersection BVHAccel::Intersect(const Ray& ray) const
 Intersection BVHAccel::getIntersection(BVHBuildNode* node, const Ray& ray) const
 {
     // TODO Traverse the BVH to find intersection
-
+    Intersection isect;
+	if (!node || !node->bounds.IntersectP(ray)) {
+		return isect; //没有相交
+	}
+	if (node->object) {
+		//叶子节点
+		isect = node->object->getIntersection(ray);
+		if (isect.happened) {
+			return isect;
+		}
+	}
+	else {
+		//非叶子节点
+		Intersection leftIsect = getIntersection(node->left, ray);
+		Intersection rightIsect = getIntersection(node->right, ray);
+		if (leftIsect.happened && rightIsect.happened) {
+			if (leftIsect.distance < rightIsect.distance) {
+				return leftIsect;
+			}
+			else {
+				return rightIsect;
+			}
+		}
+		else if (leftIsect.happened) {
+			return leftIsect;
+		}
+		else if (rightIsect.happened) {
+			return rightIsect;
+		}
+	}
+	return isect; //没有相交
 }

@@ -343,7 +343,7 @@ int main(int argc, const char** argv)
     float angle = 140.0;
     bool command_line = false;
 
-    std::string filename = "output.png";
+    std::string filename = "homework03.png";
     objl::Loader Loader;
     std::string obj_path = "03/Code/models/spot/";
 

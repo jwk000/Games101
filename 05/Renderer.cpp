@@ -121,9 +121,7 @@ std::optional<hit_payload> trace(
 // If the surface is diffuse/glossy we use the Phong illumation model to compute the color
 // at the intersection point.
 // [/comment]
-Vector3f castRay(
-        const Vector3f &orig, const Vector3f &dir, const Scene& scene,
-        int depth)
+Vector3f castRay(const Vector3f &orig, const Vector3f &dir, const Scene& scene,int depth)
 {
     if (depth > scene.maxDepth) {
         return Vector3f(0.0,0.0,0.0);
@@ -223,12 +221,14 @@ void Renderer::Render(const Scene& scene)
         for (int i = 0; i < scene.width; ++i)
         {
             // generate primary ray direction
-            float x;
-            float y;
             // TODO: Find the x and y positions of the current pixel to get the direction
             // vector that passes through it.
             // Also, don't forget to multiply both of them with the variable *scale*, and
             // x (horizontal) variable with the *imageAspectRatio*            
+			// 归一化到-1,1，这时候宽高比是1:1，需要x乘以aspectRatio拉伸
+            // x,y乘以缩放比例用来使fov生效，否则y固定-1,1就是fov=90度
+			float x = ((2 * (i + 0.5) / (float)scene.width - 1) * imageAspectRatio) * scale;//i<w/2的时候x<0
+			float y = ((1 - 2 * (j + 0.5) / (float)scene.height) * scale);//j>h/2的时候y<0
 
             Vector3f dir = Vector3f(x, y, -1); // Don't forget to normalize this direction!
             framebuffer[m++] = castRay(eye_pos, dir, scene, 0);
@@ -237,7 +237,8 @@ void Renderer::Render(const Scene& scene)
     }
 
     // save framebuffer to file
-    FILE* fp = fopen("binary.ppm", "wb");
+    FILE* fp = nullptr;
+    fopen_s(&fp,"homework05.ppm", "wb");
     (void)fprintf(fp, "P6\n%d %d\n255\n", scene.width, scene.height);
     for (auto i = 0; i < scene.height * scene.width; ++i) {
         static unsigned char color[3];

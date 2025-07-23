@@ -47,17 +47,18 @@ public:
 };
 
 struct BVHBuildNode {
-    Bounds3 bounds;
-    BVHBuildNode *left;
+    Bounds3 bounds; //总包围盒
+    BVHBuildNode *left; 
     BVHBuildNode *right;
-    Object* object;
+    Object* object;//如果是叶子节点obj有值
 
 public:
     int splitAxis=0, firstPrimOffset=0, nPrimitives=0;
     // BVHBuildNode Public Methods
     BVHBuildNode(){
         bounds = Bounds3();
-        left = nullptr;right = nullptr;
+        left = nullptr;
+        right = nullptr;
         object = nullptr;
     }
 };

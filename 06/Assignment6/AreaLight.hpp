@@ -8,6 +8,7 @@
 #include "Light.hpp"
 #include "global.hpp"
 
+
 class AreaLight : public Light
 {
 public:
@@ -19,6 +20,7 @@ public:
         length = 100;
     }
 
+    //采样点
     Vector3f SamplePoint() const
     {
         auto random_u = get_random_float();

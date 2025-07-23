@@ -20,19 +20,31 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="02\global.hpp" />
-    <ClInclude Include="05\global.hpp" />
-    <ClInclude Include="05\Light.hpp" />
-    <ClInclude Include="05\Object.hpp" />
-    <ClInclude Include="05\Renderer.hpp" />
-    <ClInclude Include="05\Scene.hpp" />
-    <ClInclude Include="05\Sphere.hpp" />
-    <ClInclude Include="05\Triangle.hpp" />
-    <ClInclude Include="05\Vector.hpp" />
+    <ClInclude Include="07\Assignment7\AreaLight.hpp" />
+    <ClInclude Include="07\Assignment7\Bounds3.hpp" />
+    <ClInclude Include="07\Assignment7\BVH.hpp" />
+    <ClInclude Include="07\Assignment7\global.hpp" />
+    <ClInclude Include="07\Assignment7\Intersection.hpp" />
+    <ClInclude Include="07\Assignment7\Light.hpp" />
+    <ClInclude Include="07\Assignment7\Material.hpp" />
+    <ClInclude Include="07\Assignment7\Object.hpp" />
+    <ClInclude Include="07\Assignment7\OBJ_Loader.hpp" />
+    <ClInclude Include="07\Assignment7\Ray.hpp" />
+    <ClInclude Include="07\Assignment7\Renderer.hpp" />
+    <ClInclude Include="07\Assignment7\Scene.hpp" />
+    <ClInclude Include="07\Assignment7\Sphere.hpp" />
+    <ClInclude Include="07\Assignment7\Triangle.hpp" />
+    <ClInclude Include="07\Assignment7\Vector.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="05\main.cpp" />
-    <ClCompile Include="05\Renderer.cpp" />
-    <ClCompile Include="05\Scene.cpp" />
+    <ClCompile Include="07\Assignment7\BVH.cpp" />
+    <ClCompile Include="07\Assignment7\main.cpp" />
+    <ClCompile Include="07\Assignment7\Renderer.cpp" />
+    <ClCompile Include="07\Assignment7\Scene.cpp" />
+    <ClCompile Include="07\Assignment7\Vector.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="07\Assignment7\CMakeLists.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
@@ -139,6 +151,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

@@ -5,7 +5,7 @@
 #include <fstream>
 #include "Scene.hpp"
 #include "Renderer.hpp"
-
+#include<thread>
 
 inline float deg2rad(const float& deg) { return deg * M_PI / 180.0; }
 
@@ -16,42 +16,69 @@ const float EPSILON = 0.00001;
 // framebuffer is saved to a file.
 void Renderer::Render(const Scene& scene)
 {
-    std::vector<Vector3f> framebuffer(scene.width * scene.height);
+	std::vector<Vector3f> framebuffer(scene.width * scene.height);
 
-    float scale = tan(deg2rad(scene.fov * 0.5));
-    float imageAspectRatio = scene.width / (float)scene.height;
-    Vector3f eye_pos(278, 273, -800);
-    int m = 0;
+	float scale = tan(deg2rad(scene.fov * 0.5));
+	float imageAspectRatio = scene.width / (float)scene.height;
+	Vector3f eye_pos(278, 273, -800);
+	int m = 0;
 
-    // change the spp value to change sample ammount
-    int spp = 16;
-    std::cout << "SPP: " << spp << "\n";
-    for (uint32_t j = 0; j < scene.height; ++j) {
-        for (uint32_t i = 0; i < scene.width; ++i) {
-            // generate primary ray direction
-            float x = (2 * (i + 0.5) / (float)scene.width - 1) *
-                      imageAspectRatio * scale;
-            float y = (1 - 2 * (j + 0.5) / (float)scene.height) * scale;
+	// change the spp value to change sample ammount
+	int spp = 16;//每个像素16条光线采样
+	std::thread th[16];
+	std::cout << "SPP: " << spp << "\n";
+	int rowNum = scene.height / 16;
+	std::atomic_int process = 0;
+	for (int i = 0; i < 16; ++i) {
+		th[i] = std::thread([&, i]() {
+			int m = i * rowNum * scene.width;
+			for (uint32_t j = i * rowNum; j < (i + 1) * rowNum && j < scene.height; ++j) {
+				for (uint32_t k = 0; k < scene.width; ++k) {
+					// generate primary ray direction
+					float x = (2 * (k + 0.5) / (float)scene.width - 1) * imageAspectRatio * scale;
+					float y = (1 - 2 * (j + 0.5) / (float)scene.height) * scale;
+					Vector3f dir = normalize(Vector3f(-x, y, 1));
+					for (int l = 0; l < spp; l++) {
+						framebuffer[m] += scene.castRay(Ray(eye_pos, dir), 0) / spp;
+					}
+					m++;
+				}
+				UpdateProgress(++process / (float)scene.height);
+			}
+			});
+	}
 
-            Vector3f dir = normalize(Vector3f(-x, y, 1));
-            for (int k = 0; k < spp; k++){
-                framebuffer[m] += scene.castRay(Ray(eye_pos, dir), 0) / spp;  
-            }
-            m++;
-        }
-        UpdateProgress(j / (float)scene.height);
-    }
-    UpdateProgress(1.f);
+	for (int i = 0; i < 16; ++i) {
+		th[i].join();
+	}
+	//for (uint32_t j = 0; j < scene.height; ++j) {
+	//	for (uint32_t i = 0; i < scene.width; ++i) {
+	//		// generate primary ray direction
+	//		float x = (2 * (i + 0.5) / (float)scene.width - 1) *
+	//			imageAspectRatio * scale;
+	//		float y = (1 - 2 * (j + 0.5) / (float)scene.height) * scale;
+	//		Vector3f dir = normalize(Vector3f(-x, y, 1));
+	//		for (int k = 0; k < spp; k++) {
+	//			
+	//			framebuffer[m] += scene.castRay(Ray(eye_pos, dir), 0) / spp;
+	//		}
+	//		m++;
+	//	}
+	//	UpdateProgress(j / (float)scene.height);
+	//}
+	UpdateProgress(1.f);
 
-    // save framebuffer to file
-    FILE* fp = fopen("binary.ppm", "wb");
-    (void)fprintf(fp, "P6\n%d %d\n255\n", scene.width, scene.height);
-    for (auto i = 0; i < scene.height * scene.width; ++i) {
-        static unsigned char color[3];
-        color[0] = (unsigned char)(255 * std::pow(clamp(0, 1, framebuffer[i].x), 0.6f));
-        color[1] = (unsigned char)(255 * std::pow(clamp(0, 1, framebuffer[i].y), 0.6f));
-        color[2] = (unsigned char)(255 * std::pow(clamp(0, 1, framebuffer[i].z), 0.6f));
-        fwrite(color, 1, 3, fp);
-    }
-    fclose(fp);    
+	// save framebuffer to file
+	FILE* fp = nullptr;
+	fopen_s(&fp, "homework07.ppm", "wb");
+	if (!fp)return;
+	fprintf(fp, "P6\n%d %d\n255\n", scene.width, scene.height);
+	for (auto i = 0; i < scene.height * scene.width; ++i) {
+		static unsigned char color[3];
+		color[0] = (unsigned char)(255 * std::pow(clamp(0, 1, framebuffer[i].x), 0.6f));
+		color[1] = (unsigned char)(255 * std::pow(clamp(0, 1, framebuffer[i].y), 0.6f));
+		color[2] = (unsigned char)(255 * std::pow(clamp(0, 1, framebuffer[i].z), 0.6f));
+		fwrite(color, 1, 3, fp);
+	}
+	fclose(fp);
 }

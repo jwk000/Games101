@@ -57,8 +57,7 @@ public:
     }
 
     bool intersect(const Ray& ray) override;
-    bool intersect(const Ray& ray, float& tnear,
-                   uint32_t& index) const override;
+    bool intersect(const Ray& ray, float& tnear,uint32_t& index) const override;
     Intersection getIntersection(Ray ray) override;
     void getSurfaceProperties(const Vector3f& P, const Vector3f& I,
                               const uint32_t& index, const Vector2f& uv,
@@ -72,9 +71,11 @@ public:
     Bounds3 getBounds() override;
 };
 
+//三角形mesh
 class MeshTriangle : public Object
 {
 public:
+    //从obj文件加载
     MeshTriangle(const std::string& filename)
     {
         objl::Loader loader;
@@ -89,13 +90,14 @@ public:
         Vector3f max_vert = Vector3f{-std::numeric_limits<float>::infinity(),
                                      -std::numeric_limits<float>::infinity(),
                                      -std::numeric_limits<float>::infinity()};
+
+        //三角形顶点
         for (int i = 0; i < mesh.Vertices.size(); i += 3) {
             std::array<Vector3f, 3> face_vertices;
             for (int j = 0; j < 3; j++) {
                 auto vert = Vector3f(mesh.Vertices[i + j].Position.X,
                                      mesh.Vertices[i + j].Position.Y,
-                                     mesh.Vertices[i + j].Position.Z) *
-                            60.f;
+                                     mesh.Vertices[i + j].Position.Z) * 60.f;
                 face_vertices[j] = vert;
 
                 min_vert = Vector3f(std::min(min_vert.x, vert.x),
@@ -128,6 +130,7 @@ public:
 
     bool intersect(const Ray& ray) { return true; }
 
+    //判断射线和mesh相交，所有三角形都遍历一遍
     bool intersect(const Ray& ray, float& tnear, uint32_t& index) const
     {
         bool intersect = false;
@@ -136,9 +139,7 @@ public:
             const Vector3f& v1 = vertices[vertexIndex[k * 3 + 1]];
             const Vector3f& v2 = vertices[vertexIndex[k * 3 + 2]];
             float t, u, v;
-            if (rayTriangleIntersect(v0, v1, v2, ray.origin, ray.direction, t,
-                                     u, v) &&
-                t < tnear) {
+            if (rayTriangleIntersect(v0, v1, v2, ray.origin, ray.direction, t, u, v) && t < tnear) {
                 tnear = t;
                 index = k;
                 intersect |= true;
@@ -150,8 +151,9 @@ public:
 
     Bounds3 getBounds() { return bounding_box; }
 
+	//获取表面属性（法线，uv）
     void getSurfaceProperties(const Vector3f& P, const Vector3f& I,
-                              const uint32_t& index, const Vector2f& uv,
+                              const uint32_t& index, const Vector2f& uv,//这个uv里存的是重心坐标系数
                               Vector3f& N, Vector2f& st) const
     {
         const Vector3f& v0 = vertices[vertexIndex[index * 3]];
@@ -166,13 +168,12 @@ public:
         st = st0 * (1 - uv.x - uv.y) + st1 * uv.x + st2 * uv.y;
     }
 
+    //根据uv坐标生成棋盘格子图案
     Vector3f evalDiffuseColor(const Vector2f& st) const
     {
         float scale = 5;
-        float pattern =
-            (fmodf(st.x * scale, 1) > 0.5) ^ (fmodf(st.y * scale, 1) > 0.5);
-        return lerp(Vector3f(0.815, 0.235, 0.031),
-                    Vector3f(0.937, 0.937, 0.231), pattern);
+        float pattern = (fmodf(st.x * scale, 1) > 0.5) ^ (fmodf(st.y * scale, 1) > 0.5);
+        return lerp(Vector3f(0.815, 0.235, 0.031), Vector3f(0.937, 0.937, 0.231), pattern);//二选一颜色
     }
 
     Intersection getIntersection(Ray ray)
@@ -187,8 +188,8 @@ public:
     }
 
     Bounds3 bounding_box;
-    std::unique_ptr<Vector3f[]> vertices;
     uint32_t numTriangles;
+    std::unique_ptr<Vector3f[]> vertices;
     std::unique_ptr<uint32_t[]> vertexIndex;
     std::unique_ptr<Vector2f[]> stCoordinates;
 
@@ -200,8 +201,7 @@ public:
 };
 
 inline bool Triangle::intersect(const Ray& ray) { return true; }
-inline bool Triangle::intersect(const Ray& ray, float& tnear,
-                                uint32_t& index) const
+inline bool Triangle::intersect(const Ray& ray, float& tnear, uint32_t& index) const
 {
     return false;
 }
@@ -232,9 +232,15 @@ inline Intersection Triangle::getIntersection(Ray ray)
     t_tmp = dotProduct(e2, qvec) * det_inv;
 
     // TODO find ray triangle intersection
+	if (t_tmp < ray.t_min || t_tmp > ray.t_max)
+		return inter;
 
-
-
+	inter.happened = true;
+	inter.coords = ray.origin + ray.direction * t_tmp;
+	inter.normal = normal;
+	inter.distance = t_tmp;
+    inter.m = m;
+    inter.obj = this;
 
     return inter;
 }

@@ -22,7 +22,7 @@ struct Intersection
     bool happened;
     Vector3f coords;
     Vector3f normal;
-    double distance;
+    double distance; //用射线相交时间t表示
     Object* obj;
     Material* m;
 };
