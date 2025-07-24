@@ -361,3 +361,7 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/08/CGL/build
+/08/CGL/deps/freetype/objs
+/08/CGL/deps/freetype/builds
+/08/CGL/deps/freetype/tests
