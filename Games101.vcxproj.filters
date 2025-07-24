@@ -2,30 +2,19 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClInclude Include="02\global.hpp" />
-    <ClInclude Include="07\Assignment7\AreaLight.hpp" />
-    <ClInclude Include="07\Assignment7\Bounds3.hpp" />
-    <ClInclude Include="07\Assignment7\BVH.hpp" />
-    <ClInclude Include="07\Assignment7\global.hpp" />
-    <ClInclude Include="07\Assignment7\Intersection.hpp" />
-    <ClInclude Include="07\Assignment7\Light.hpp" />
-    <ClInclude Include="07\Assignment7\Material.hpp" />
-    <ClInclude Include="07\Assignment7\OBJ_Loader.hpp" />
-    <ClInclude Include="07\Assignment7\Object.hpp" />
-    <ClInclude Include="07\Assignment7\Ray.hpp" />
-    <ClInclude Include="07\Assignment7\Renderer.hpp" />
-    <ClInclude Include="07\Assignment7\Scene.hpp" />
-    <ClInclude Include="07\Assignment7\Sphere.hpp" />
-    <ClInclude Include="07\Assignment7\Triangle.hpp" />
-    <ClInclude Include="07\Assignment7\Vector.hpp" />
+    <ClInclude Include="08\src\application.h" />
+    <ClInclude Include="08\src\mass.h" />
+    <ClInclude Include="08\src\rope.h" />
+    <ClInclude Include="08\src\spring.h" />
+    <ClInclude Include="08\src\xgetopt.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="07\Assignment7\BVH.cpp" />
-    <ClCompile Include="07\Assignment7\main.cpp" />
-    <ClCompile Include="07\Assignment7\Renderer.cpp" />
-    <ClCompile Include="07\Assignment7\Scene.cpp" />
-    <ClCompile Include="07\Assignment7\Vector.cpp" />
+    <ClCompile Include="08\src\application.cpp" />
+    <ClCompile Include="08\src\main.cpp" />
+    <ClCompile Include="08\src\rope.cpp" />
+    <ClCompile Include="08\src\xgetopt.c" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="07\Assignment7\CMakeLists.txt" />
+    <Text Include="08\src\CMakeLists.txt" />
   </ItemGroup>
 </Project>

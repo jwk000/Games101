@@ -287,7 +287,7 @@ class Quaternion : public Vector4D {
   Vector3D euler(void) const
   {
 	Vector3D euler;
-	const static double PI_OVER_2 = M_PI * 0.5;
+	const static double PI_OVER_2 = 3.1415926 * 0.5;
 	const static double EPSILON = 1e-10;
 	double sqw, sqx, sqy, sqz;
 
@@ -314,7 +314,7 @@ class Quaternion : public Vector4D {
 	  // If facing down, reverse yaw
 	  if (euler[1] < 0)
 	  {
-		euler[2] = M_PI - euler[2];
+		euler[2] = 3.1415926 - euler[2];
 	  }
 	}
 

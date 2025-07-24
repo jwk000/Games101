@@ -23,11 +23,11 @@ struct AppConfig {
   AppConfig() {
     // Rope config variables
     mass = 1;
-    ks = 100;
+    ks = 10;
 
     // Environment variables
     gravity = Vector2D(0, -1);
-    steps_per_frame = 64;
+    steps_per_frame = 128;
   }
 
   float mass;

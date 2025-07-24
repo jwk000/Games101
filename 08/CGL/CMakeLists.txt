@@ -129,7 +129,7 @@ if(WIN32)
 
   if(MSVC)
 
-    set(MSVC_CXX_FLAGS "-std=gnu++0x")
+    set(MSVC_CXX_FLAGS "-std=c++11")
 
     if(CGL_BUILD_DEBUG)
         set(CMAKE_BUILD_TYPE Debug)
@@ -142,7 +142,7 @@ if(WIN32)
 
   if(MINGW)
 
-    set(MSVC_CXX_FLAGS "-std=gnu++0x")
+    set(MSVC_CXX_FLAGS "-std=c++11")
 
     if(CGL_BUILD_DEBUG)
         set(CMAKE_BUILD_TYPE Debug)

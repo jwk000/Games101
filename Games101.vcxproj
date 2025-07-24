@@ -20,31 +20,20 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="02\global.hpp" />
-    <ClInclude Include="07\Assignment7\AreaLight.hpp" />
-    <ClInclude Include="07\Assignment7\Bounds3.hpp" />
-    <ClInclude Include="07\Assignment7\BVH.hpp" />
-    <ClInclude Include="07\Assignment7\global.hpp" />
-    <ClInclude Include="07\Assignment7\Intersection.hpp" />
-    <ClInclude Include="07\Assignment7\Light.hpp" />
-    <ClInclude Include="07\Assignment7\Material.hpp" />
-    <ClInclude Include="07\Assignment7\Object.hpp" />
-    <ClInclude Include="07\Assignment7\OBJ_Loader.hpp" />
-    <ClInclude Include="07\Assignment7\Ray.hpp" />
-    <ClInclude Include="07\Assignment7\Renderer.hpp" />
-    <ClInclude Include="07\Assignment7\Scene.hpp" />
-    <ClInclude Include="07\Assignment7\Sphere.hpp" />
-    <ClInclude Include="07\Assignment7\Triangle.hpp" />
-    <ClInclude Include="07\Assignment7\Vector.hpp" />
+    <ClInclude Include="08\src\application.h" />
+    <ClInclude Include="08\src\mass.h" />
+    <ClInclude Include="08\src\rope.h" />
+    <ClInclude Include="08\src\spring.h" />
+    <ClInclude Include="08\src\xgetopt.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="07\Assignment7\BVH.cpp" />
-    <ClCompile Include="07\Assignment7\main.cpp" />
-    <ClCompile Include="07\Assignment7\Renderer.cpp" />
-    <ClCompile Include="07\Assignment7\Scene.cpp" />
-    <ClCompile Include="07\Assignment7\Vector.cpp" />
+    <ClCompile Include="08\src\application.cpp" />
+    <ClCompile Include="08\src\main.cpp" />
+    <ClCompile Include="08\src\rope.cpp" />
+    <ClCompile Include="08\src\xgetopt.c" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="07\Assignment7\CMakeLists.txt" />
+    <Text Include="08\src\CMakeLists.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
@@ -99,8 +88,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\vcpkg\installed\x64-windows\include</IncludePath>
-    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);C:\vcpkg\installed\x64-windows\lib</LibraryPath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\vcpkg\installed\x64-windows\include;08\CGL\include;</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);C:\vcpkg\installed\x64-windows\lib;08\CGL\build\deps\glew\Debug;08\CGL\build\src\Debug;08\CGL\build\deps\glfw\src\Debug;08\CGL\deps\freetype\objs</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -134,13 +123,14 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_USE_MATH_DEFINES</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);CGL.lib;glew.lib;glfw3.lib;opengl32.lib;freetype.lib;</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
